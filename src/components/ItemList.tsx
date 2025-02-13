@@ -51,14 +51,19 @@ const ItemList: React.FC = () => {
     // Handle update an item
 
 
-      const handleUpdateItem = async (id: number | undefined, updatedItem: { title: string; body: string }) => {
+    const handleUpdateItem = async (id: number | undefined, updatedItem: { title: string; body: string }) => {
         try {
           const updated = await updateItem(id, updatedItem);
-          setItems(items.map(item => (item.id === id ? updated : item)));
+   
+          setItems(prevItems =>
+            prevItems.map(item => (item.id === id ? { ...item, ...updated } : item))
+          );
         } catch (error) {
+            console.log('error: ', error);
           setError('Error updating item. Please try again later.');
         }
       };
+      
 
   useEffect(() => {
     fetchItems();

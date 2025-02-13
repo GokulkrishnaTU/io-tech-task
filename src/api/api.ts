@@ -1,55 +1,52 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'https://jsonplaceholder.typicode.com/posts';
+const API_URL = "https://jsonplaceholder.typicode.com/posts";
 
 // Get the list of items from the mock API
 export const getItems = async () => {
   try {
     const response = await axios.get(API_URL);
-    return response.data;  // Return the list of items
+    return response.data; // Return the list of items
   } catch (error) {
-    console.error('Error fetching items:', error);
+    console.error("Error fetching items:", error);
     throw error;
   }
 };
 
 // add items to the list of items from the mock API
 
-
 export const addItem = async (item: { title: string; body: string }) => {
-    try {
-      const response = await axios.post(API_URL, item);
-      return response.data;
-    } catch (error) {
-      console.error('Error adding item:', error);
-      throw error;
-    }
-  };
-
+  try {
+    const response = await axios.post(API_URL, item);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding item:", error);
+    throw error;
+  }
+};
 
 // Delete items from the list of items from the mock API
 
-  export const deleteItem = async (id: number | undefined) => {
-    try {
-      await axios.delete(`${API_URL}/${id}`);
-    } catch (error) {
-      console.error('Error deleting item:', error);
-      throw error;
-    }
-  };
-
+export const deleteItem = async (id: number | undefined) => {
+  try {
+    await axios.delete(`${API_URL}/${id}`);
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    throw error;
+  }
+};
 
 // update items from the list of items from the mock API
 
-
-  export const updateItem = async (id: number | undefined, updatedItem: { title: string; body: string }) => {
-    try {
-      const response = await axios.put(`${API_URL}/${id}`, updatedItem);
-      return response.data;
-    } catch (error) {
-      console.error('Error updating item:', error);
-      throw error;
-    }
-  };
-  
-  
+export const updateItem = async (
+  id: number | undefined,
+  updatedItem: { title: string; body: string }
+) => {
+  try {
+    const response = await axios.put(`${API_URL}/${id}`, updatedItem);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating item:", error);
+    throw error;
+  }
+};
