@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getItems,addItem ,deleteItem } from '../api/api.ts';
+import { getItems,addItem ,deleteItem ,updateItem } from '../api/api.ts';
 import ItemCard from './ItemCard.tsx';
 import ItemForm from './ItemForm.tsx';
 
@@ -48,6 +48,18 @@ const ItemList: React.FC = () => {
         }
       };
 
+    // Handle update an item
+
+
+      const handleUpdateItem = async (id: number | undefined, updatedItem: { title: string; body: string }) => {
+        try {
+          const updated = await updateItem(id, updatedItem);
+          setItems(items.map(item => (item.id === id ? updated : item)));
+        } catch (error) {
+          setError('Error updating item. Please try again later.');
+        }
+      };
+
   useEffect(() => {
     fetchItems();
   }, []);
@@ -62,7 +74,8 @@ const ItemList: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map(item => (
-            <ItemCard key={item.id} item={item} onDelete={handleDeleteItem} />  
+            <ItemCard key={item.id} item={item} onDelete={handleDeleteItem} onUpdate={handleUpdateItem}
+            />  
         ))}
         </div>
       )}

@@ -37,3 +37,19 @@ export const addItem = async (item: { title: string; body: string }) => {
       throw error;
     }
   };
+
+
+// update items from the list of items from the mock API
+
+
+  export const updateItem = async (id: number | undefined, updatedItem: { title: string; body: string }) => {
+    try {
+      const response = await axios.put(`${API_URL}/${id}`, updatedItem);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating item:', error);
+      throw error;
+    }
+  };
+  
+  
