@@ -12,3 +12,16 @@ export const getItems = async () => {
     throw error;
   }
 };
+
+// add items to the list of items from the mock API
+
+
+export const addItem = async (item: { title: string; body: string }) => {
+    try {
+      const response = await axios.post(API_URL, item);
+      return response.data;
+    } catch (error) {
+      console.error('Error adding item:', error);
+      throw error;
+    }
+  };

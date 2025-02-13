@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getItems } from '../api/api.ts';
+import { getItems,addItem } from '../api/api.ts';
 import ItemCard from './ItemCard.tsx';
+import ItemForm from './ItemForm.tsx';
 
 interface Item {
   id?: number;
@@ -25,6 +26,17 @@ const ItemList: React.FC = () => {
     }
   };
 
+
+
+  const handleAddItem = async (item: { title: string; body: string }) => {
+    try {
+      const newItem = await addItem(item);
+      setItems([newItem, ...items]);
+    } catch (error) {
+      setError('Error adding item. Please try again later.');
+    }
+  };
+
   useEffect(() => {
     fetchItems();
   }, []);
@@ -32,6 +44,8 @@ const ItemList: React.FC = () => {
   return (
     <div className="container mx-auto">
       {error && <p className="text-red-500 text-center">{error}</p>}  
+      <ItemForm onAdd={handleAddItem} />
+
       {loading ? (
         <p className="text-center">Loading...</p> 
       ) : (
