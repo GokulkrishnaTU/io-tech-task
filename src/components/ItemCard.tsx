@@ -17,15 +17,25 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onDelete, onUpdate }) => {
   const [updatedTitle, setUpdatedTitle] = useState(item.title);
   const [updatedBody, setUpdatedBody] = useState(item.body);
 
+  // Handle Edit button click
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
+  // Handle Update form submission
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (updatedTitle && updatedBody) {
       await onUpdate(item.id, { title: updatedTitle, body: updatedBody });
       setIsEditing(false);  
+    }
+  };
+
+  // Handle Delete button click with confirmation
+  const handleDeleteClick = () => {
+    const confirmed = window.confirm('Are you sure you want to delete this item?');  // Confirmation dialog
+    if (confirmed) {
+      onDelete(item.id);  // Call the onDelete function if confirmed
     }
   };
 
@@ -59,7 +69,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onDelete, onUpdate }) => {
             Edit
           </button>
           <button
-            onClick={() => onDelete(item.id)}
+            onClick={handleDeleteClick}  // Use the new delete function with confirmation
             className="mt-2 ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
             Delete

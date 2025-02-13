@@ -25,3 +25,15 @@ export const addItem = async (item: { title: string; body: string }) => {
       throw error;
     }
   };
+
+
+// Delete items from the list of items from the mock API
+
+  export const deleteItem = async (id: number | undefined) => {
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      throw error;
+    }
+  };

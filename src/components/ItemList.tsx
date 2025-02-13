@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getItems,addItem } from '../api/api.ts';
+import { getItems,addItem ,deleteItem } from '../api/api.ts';
 import ItemCard from './ItemCard.tsx';
 import ItemForm from './ItemForm.tsx';
 
@@ -37,6 +37,17 @@ const ItemList: React.FC = () => {
     }
   };
 
+
+    // Handle deleting an item
+    const handleDeleteItem = async (id: number) => {
+        try {
+          await deleteItem(id);  // Delete the item using the API
+          setItems(items.filter(item => item.id !== id));  // Remove the item from the list in the state
+        } catch (error) {
+          setError('Error deleting item. Please try again later.');
+        }
+      };
+
   useEffect(() => {
     fetchItems();
   }, []);
@@ -51,8 +62,8 @@ const ItemList: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map(item => (
-            <ItemCard key={item.id} item={item} />
-          ))}
+            <ItemCard key={item.id} item={item} onDelete={handleDeleteItem} />  
+        ))}
         </div>
       )}
     </div>
