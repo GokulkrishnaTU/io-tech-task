@@ -18,7 +18,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onAdd }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4 p-4 bg-white shadow rounded-lg">
+    <form onSubmit={handleSubmit} className="mb-4 p-4 bg-black shadow rounded-lg">
       <input
         type="text"
         value={title}
