@@ -1,8 +1,11 @@
 // Import the Axios library for making HTTP requests
 import axios from "axios";
 
-// Define the base URL for the mock API
-const API_URL = "https://jsonplaceholder.typicode.com/posts";
+if (!process.env.REACT_APP_API_URL) {
+  throw new Error("REACT_APP_API_URL is not defined");
+}
+const API_URL: string = process.env.REACT_APP_API_URL;
+
 
 /**
  * Get the list of items from the mock API
