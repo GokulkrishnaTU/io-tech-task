@@ -1,12 +1,13 @@
 import React from 'react';
-import './App.css';
+import ItemList from './components/ItemList.tsx';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-     <h1 className="text-blue-600">heyy IO tech</h1>
+    <div className="min-h-screen bg-gray-100 p-5">
+      <h1 className="text-3xl font-bold text-center mb-5">Item List</h1>
+      <ItemList />
     </div>
   );
-}
+};
 
 export default App;
