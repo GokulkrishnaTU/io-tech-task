@@ -84,8 +84,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ item, onDelete, onUpdate }) => {
       ) : (
         // Render the item details when not in edit mode
         <>
-          <h2 className="text-xl font-bold mb-2 text-white">{item.title}</h2>
-          <p className="text-gray-300">{item.body}</p>
+          <h2 className="text-xl font-bold mb-2 text-white font-sans capitalize">{item.title}</h2>
+          <p className="text-gray-300 font-serif capitalize">{item.body}</p>
           <div className="mt-4">
             <button
               onClick={handleEditClick} // Enable edit mode on click
