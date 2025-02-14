@@ -30,7 +30,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ onAdd }) => {
   return (
     <form 
       onSubmit={handleSubmit} // Trigger handleSubmit on form submission
-      className="mb-4 p-4 bg-black shadow rounded-lg" // Tailwind CSS classes for styling
+      className="mb-4  bg-black shadow rounded-lg" // Tailwind CSS classes for styling
     >
       <input
         type="text" // Input type for the title

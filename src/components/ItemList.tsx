@@ -15,106 +15,122 @@ interface Item {
   body: string;
 }
 
-// Main component for displaying and managing the list of items
 const ItemList: React.FC = () => {
-  // State to store the list of items
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>([]);  
+  const [loading, setLoading] = useState<boolean>(true);  
+  const [error, setError] = useState<string | null>(null);  
+  const [sortOrder, setSortOrder] = useState<string>('title');  // Default sort by title
+  const [searchTerm, setSearchTerm] = useState<string>('');  // For filtering items based on search input
 
-  // State to manage loading status
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // State to manage error messages
-  const [error, setError] = useState<string | null>(null);
-
-  /**
-   * Fetch items from the API and update state
-   */
+  // Fetch all items from the API
   const fetchItems = async () => {
-    setLoading(true); // Set loading state to true while fetching data
+    setLoading(true);
     try {
-      const fetchedItems = await getItems(); // Fetch items from the API
-      setItems(fetchedItems); // Update state with fetched items
+      const fetchedItems = await getItems();  
+      setItems(fetchedItems);  
     } catch (error) {
-      // Set an error message in case of failure
       setError('Error fetching items. Please try again later.');
     } finally {
-      setLoading(false); // Stop loading after fetch is complete
+      setLoading(false);  
     }
   };
 
-  /**
-   * Handle adding a new item to the list
-   * @param item - The item object containing title and body
-   */
+  // Sort items based on selected criteria (title or body)
+  const sortItems = (items: Item[]) => {
+    return [...items].sort((a, b) => {
+      if (a[sortOrder] < b[sortOrder]) return -1;
+      if (a[sortOrder] > b[sortOrder]) return 1;
+      return 0;
+    });
+  };
+
+  // Filter items based on the search term
+  const filterItems = (items: Item[]) => {
+    return items.filter(item => 
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      item.body.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
   const handleAddItem = async (item: { title: string; body: string }) => {
     try {
-      const newItem = await addItem(item); // Add item using the API
-      setItems([newItem, ...items]); // Add the new item at the top of the list
+      const newItem = await addItem(item);
+      setItems([newItem, ...items]);
     } catch (error) {
       setError('Error adding item. Please try again later.');
     }
   };
 
-  /**
-   * Handle deleting an item from the list
-   * @param id - The ID of the item to be deleted
-   */
   const handleDeleteItem = async (id: number) => {
     try {
-      await deleteItem(id); // Delete the item using the API
-      // Remove the item from the list in the state
-      setItems(items.filter(item => item.id !== id));
+      await deleteItem(id);  
+      setItems(items.filter(item => item.id !== id));  
     } catch (error) {
       setError('Error deleting item. Please try again later.');
     }
   };
 
-  /**
-   * Handle updating an existing item in the list
-   * @param id - The ID of the item to be updated
-   * @param updatedItem - The updated item object containing title and body
-   */
-  const handleUpdateItem = async (
-    id: number | undefined,
-    updatedItem: { title: string; body: string }
-  ) => {
+  const handleUpdateItem = async (id: number | undefined, updatedItem: { title: string; body: string }) => {
     try {
-      const updated = await updateItem(id, updatedItem); // Update the item using the API
-      // Update the state with the modified item
-      setItems(prevItems =>
-        prevItems.map(item => (item.id === id ? { ...item, ...updated } : item))
-      );
+      const updated = await updateItem(id, updatedItem);
+      setItems(items.map(item => (item.id === id ? updated : item)));
     } catch (error) {
-      console.error('Error updating item:', error);
       setError('Error updating item. Please try again later.');
     }
   };
 
-  // Fetch items when the component mounts
   useEffect(() => {
     fetchItems();
   }, []);
 
+  // Apply sorting and filtering
+  const sortedAndFilteredItems = filterItems(sortItems(items));
+
   return (
     <div className="container mx-auto">
-      {error && <p className="text-red-500 text-center">{error}</p>} 
+      {error && <p className="text-red-500 text-center">{error}</p>}  
+
+
+      <div className="flex justify-between">
+
       
-      {/* Form component to add new items */}
+      {/* Filter Input */}
+      <div className="mb-4">
+        <input 
+          type="text" 
+          value={searchTerm} 
+          onChange={(e) => setSearchTerm(e.target.value)} 
+          placeholder="Search items" 
+          className="w-full p-2 mb-2 border rounded" 
+        />
+      </div>
+
+      {/* Sorting Dropdown */}
+      <div className="mb-4 ">
+        <select 
+          value={sortOrder} 
+          onChange={(e) => setSortOrder(e.target.value)} 
+          className="w-full p-2 border rounded"
+          >
+          <option value="title">Sort by Title</option>
+          <option value="body">Sort by Body</option>
+        </select>
+      </div>
+          </div>
+
       <ItemForm onAdd={handleAddItem} />
 
       {loading ? (
-        // Display a loading message while fetching items
-        <p className="text-center">Loading...</p>
+        <p className="text-center">Loading...</p> 
       ) : (
-        // Display the list of items in a grid layout
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map(item => (
+          {sortedAndFilteredItems.map(item => (
             <ItemCard 
-              key={item.id} // Unique key for each item
-              item={item} // Pass the item data to the ItemCard component
-              onDelete={handleDeleteItem} // Pass the delete handler to ItemCard
-              onUpdate={handleUpdateItem} // Pass the update handler to ItemCard
-            />
+              key={item.id} 
+              item={item} 
+              onDelete={handleDeleteItem} 
+              onUpdate={handleUpdateItem}
+            />  
           ))}
         </div>
       )}
