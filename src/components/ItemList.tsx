@@ -91,7 +91,7 @@ const ItemList: React.FC = () => {
       {error && <p className="text-red-500 text-center">{error}</p>}  
 
 
-      <div className="flex justify-between">
+      <div className="flex flex-col md:flex-row justify-between">
 
       
       {/* Filter Input */}
